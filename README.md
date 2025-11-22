@@ -1,12 +1,20 @@
 ListView — High-Performance Virtualized UI List for Unity
 
-<h2>✨ Overview</h2>
+## 📚 Table of Contents
+
+1. [Overview](#overview)
+2. [Data Model](#data-model)
+3. [Creating ListView Cards](#creating-list-view-cards)
+4. [Setting Up ListView](#setting-up-list-view)
+5. [Providing Data](#providing-data)
+
+<h2 id="overview">✨ Overview</h2>
 
 ListView is a high-performance virtualized list component for Unity, built for developers who want smooth scrolling, zero garbage, and clean architecture — without fighting the engine.
 Its mission is simple: turn complex UI lists into something easier than brewing your morning coffee.
 No magic, no hacks — just a pleasant API and performance that doesn’t melt your profiler.
 
-<h2>📦 Data Model — Implementing IListData</h2>
+<h2 id="data-model">📦 Data Model — Implementing IListData</h2>
 
 Every item displayed in ListView must implement the IListData interface.
 And before you panic — yes, it’s basically a marker interface. No methods, no properties, no boilerplate.
@@ -24,7 +32,7 @@ public class InventoryItem : IListData
 }
 ```
 
-<h2>🧩 Creating ListView Cards — Your UI Frontend</h2>
+<h2 id="creating-list-view-cards">🧩 Creating ListView Cards — Your UI Frontend</h2>
 
 Each visual element inside the ListView is represented by a card — a MonoBehaviour that inherits from:
 ```csharp
@@ -86,7 +94,7 @@ This is all most cards ever need.
 
 You get clean, type-safe data access and a simple lifecycle that’s easy to reason about — no heavy abstractions, no magic events, no overcomplicated UI frameworks.
 
-<h2>🧱 Setting Up ListView in Unity</h2>
+<h2 id="setting-up-list-view">🧱 Setting Up ListView in Unity</h2>
 
 Adding ListView to your Canvas is intentionally simple — it works on top of Unity’s built-in ScrollRect, so if you’ve ever used a normal scroll view, you’re already 90% done.
 Steps:
@@ -179,3 +187,32 @@ The result should look like this:
     
     <img width="1492" height="606" alt="image" src="https://github.com/user-attachments/assets/db5aea51-e3cf-467b-ac5e-30841cc59ee1" />
 
+<h2 id="providing-data">📥Providing Data to the ListView</h2>
+
+Feeding data into the ListView is intentionally simple.
+All you need to do is prepare a list of items that implement IListData and pass it to the ListView using SetupData.
+
+Here’s a minimal example:
+
+```csharp
+public class MissionsPanel : MonoBehaviour
+{
+    [SerializeField] private ListView _listView;
+
+    private readonly List<IListData> _data = new();
+
+    private void Start()
+    {
+        InitializeData();               // Fill your list with items that implement IListData
+        _listView.SetupData(_data);     // Pass the data to the ListView
+    }
+}
+```
+
+And that's it.
+
+No manual instantiation.
+No layout rebuilding.
+No recycling logic.
+
+ListView takes care of everything automatically: virtualization, pooling, spawning, recycling, layout positioning — all behind the scenes.
