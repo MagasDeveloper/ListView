@@ -7,6 +7,8 @@ ListView — High-Performance Virtualized UI List for Unity
 3. [Creating ListView Cards](#creating-list-view-cards)
 4. [Setting Up ListView](#setting-up-list-view)
 5. [Providing Data](#providing-data)
+6. [Listeners](#listeners)
+7. [Manipulator](#manipulator)
 
 <h2 id="overview">✨ Overview</h2>
 
@@ -216,3 +218,182 @@ No layout rebuilding.
 No recycling logic.
 
 ListView takes care of everything automatically: virtualization, pooling, spawning, recycling, layout positioning — all behind the scenes.
+
+<h2 id="listeners">🎧 Listeners — Subscribing to ListView Events</h2>
+
+ListView exposes several useful events that allow you to react to what happens inside the list: card creation, spawning, recycling, and content movement.
+These events are available through:
+
+```csharp
+_listView.Listeners
+```
+You can subscribe to them at any time — for example, right after SetupData():
+
+```csharp
+public class MissionsPanel : MonoBehaviour
+{
+    [SerializeField] private ListView _listView;
+
+    private void Start()
+    {
+        InitializeData();
+        _listView.SetupData(_data);
+
+        _listView.Listeners.OnCreate.AddListener(OnCardCreated);
+        _listView.Listeners.OnSpawn.AddListener(OnCardSpawned);
+        _listView.Listeners.OnRecycle.AddListener(OnCardRecycled);
+        _listView.Listeners.OnContentMove.AddListener(OnContentMoved);
+    }
+
+    private void OnCardCreated(ListViewElement element)
+    {
+        Debug.Log($"Card created: {element}");
+    }
+
+    private void OnCardSpawned(ListViewElement element)
+    {
+        Debug.Log($"Card spawned: {element}");
+    }
+
+    private void OnCardRecycled(ListViewElement element)
+    {
+        Debug.Log($"Card recycled: {element}");
+    }
+
+    private void OnContentMoved(Vector2 position)
+    {
+        Debug.Log($"Content moved: {position}");
+    }
+}
+```
+### 🔎 Available Events
+
+Each event is defined inside ListListeners:
+- OnCreate — triggered when a card GameObject is instantiated in the pool.
+- OnSpawn — triggered when a data item becomes visible in the viewport and is assigned to a card.
+- OnRecycle — triggered when a card moves outside the viewport and is recycled.
+- OnContentMove — called every time the ScrollRect content moves.
+
+### 💡Why Listeners Are Useful?
+
+You can use them for:
+
+- tracking when elements appear/disappear
+- playing animations or sound effects
+- lazy-loading resources
+- analytics (e.g., “element seen by user”)
+- debugging scroll behavior
+
+<h2 id="manipulator">🎯 ListView Manipulator — Smooth, User-Friendly Navigation</h2>
+
+The ListView Manipulator is a built-in helper that allows you to smoothly scroll to any item or position inside your ListView.
+Its goal is simple: replace hard jumps with beautiful, animated navigation — perfect for menus, mission trees, inventories, and any UI that needs a polished feel.
+
+You can access it through:
+
+```csharp
+_listView.Manipulator
+```
+
+### 🚀 Basic Usage
+
+Scrolling to an item by index:
+
+```csharp
+_listView.Manipulator
+    .ScrollTo(5, 0.35f)
+    .Play();
+```
+
+Scrolling to an item by data instance:
+
+```csharp
+_listView.Manipulator
+    .ScrollTo(myMissionData, 0.5f)
+    .Play();
+```
+
+That’s all you need for a simple animated scroll.
+
+### 🛠️ What the Manipulator Actually Does
+
+Under the hood, the manipulator:
+
+- finds the virtual card that corresponds to the item
+- calculates the exact target position inside the ScrollRect
+- builds a smooth animation process
+- moves the content using lerp or a custom animation curve
+- interrupts the previous scroll if you start a new one
+- Thanks to virtualization, this works even if the item isn’t currently visible.
+
+### 🔧 Advanced: Customizing the Scroll Animation
+
+The manipulator uses a builder pattern, so you can chain settings:
+
+```csharp
+_listView.Manipulator
+    .ScrollTo(10, 0.75f)
+    .SetOffset(20f)               // scroll slightly past the element
+    .SetDelay(0.1f)               // delay before movement begins
+    .SetTimeScaled(false)         // ignore Time.timeScale
+    .SetAlignment(AlignmentType.Center)
+    .SetAnimationCurve(_animationCurve)
+    .OnStart(() => Debug.Log("Scrolling..."))
+    .OnComplete(() => Debug.Log("Done"))
+    .Play();
+```
+
+You can even run it as a coroutine:
+
+```csharp
+yield return _listView.Manipulator
+    .ScrollTo(3, 0.5f)
+    .PlayCoroutine(this);
+```
+
+or as an async task:
+
+```csharp
+await _listView.Manipulator
+    .ScrollTo(3, 0.5f)
+    .PlayAsync(token);
+```
+
+All available thanks to the process builder in ListViewManipulatorProcessBuilder
+
+###📐 Alignment Options
+
+Manipulator supports aligning the target element to:
+
+- Start (default)
+- Center
+- End
+
+```csharp
+.SetAlignment(AlignmentType.Center)
+```
+
+Perfect for mission selectors, carousels, or anything where the focused item should be highlighted.
+
+### ⚡ Interrupt-Safe
+
+Every new scroll automatically interrupts the previous one:
+
+```csharp
+_currentProcess?.Interrupt();
+```
+
+(from ListViewManipulator implementation)
+ensuring clean transitions and no stuck animations.
+
+### 🎉 Summary
+
+| Feature              | Description                               |
+|----------------------|-------------------------------------------|
+| Scroll to index      | `ScrollTo(index, duration)`               |
+| Scroll to data       | `ScrollTo(data, duration)`                |
+| Smooth animations    | `AnimationCurve`, delay, offset           |
+| Robust control       | Start, complete, interrupt callbacks      |
+| Multiple modes       | `Play()`, `PlayAsync()`, `PlayCoroutine()` |
+| Auto interrupt       | Never overlaps animations                 |
+| Works with virtualization | Even if the item is off-screen     |
