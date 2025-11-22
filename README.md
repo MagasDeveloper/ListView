@@ -14,17 +14,17 @@ ListView is a high-performance virtualized list component for Unity, built for d
 Its mission is simple: turn complex UI lists into something easier than brewing your morning coffee.
 No magic, no hacks — just a pleasant API and performance that doesn’t melt your profiler.
 
-<h2 id="data-model">📦 Data Model — Implementing IListData</h2>
+<h2 id="data-model">📦 Data Model — Implementing ILisViewtData</h2>
 
-Every item displayed in ListView must implement the IListData interface.
+Every item displayed in ListView must implement the ILisViewtData interface.
 And before you panic — yes, it’s basically a marker interface. No methods, no properties, no boilerplate.
 
 Why does it exist?
 Because ListView needs a simple way to confirm that your data type is “valid” for the virtualized system.
 Think of it as a backstage pass:
-If your data implements IListData, ListView knows it can work with it.
+If your data implements ILisViewtData, ListView knows it can work with it.
 ```csharp
-public class InventoryItem : IListData
+public class InventoryItem : ILisViewtData
 {
     public string Name;
     public Sprite Icon;
@@ -39,7 +39,7 @@ Each visual element inside the ListView is represented by a card — a MonoBehav
 ListViewCard<TData>
 ```
 
-Where TData is your data model type (the one that implements IListData).
+Where TData is your data model type (the one that implements ILisViewtData).
 This makes every card strongly typed, safe, and directly connected to the data it represents.
 
 <h2>🎛 Available Lifecycle Methods</h2>
@@ -190,7 +190,7 @@ The result should look like this:
 <h2 id="providing-data">📥Providing Data to the ListView</h2>
 
 Feeding data into the ListView is intentionally simple.
-All you need to do is prepare a list of items that implement IListData and pass it to the ListView using SetupData.
+All you need to do is prepare a list of items that implement ILisViewtData and pass it to the ListView using SetupData.
 
 Here’s a minimal example:
 
@@ -199,11 +199,11 @@ public class MissionsPanel : MonoBehaviour
 {
     [SerializeField] private ListView _listView;
 
-    private readonly List<IListData> _data = new();
+    private readonly List<ILisViewtData> _data = new();
 
     private void Start()
     {
-        InitializeData();               // Fill your list with items that implement IListData
+        InitializeData();               // Fill your list with items that implement ILisViewtData
         _listView.SetupData(_data);     // Pass the data to the ListView
     }
 }
