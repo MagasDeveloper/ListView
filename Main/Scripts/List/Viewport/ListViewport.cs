@@ -68,6 +68,25 @@ namespace Mahas.ListView
             return false;
         }
         
+        /// <summary>
+        /// Attempts to retrieve the card instance associated with the given data item.
+        /// </summary>
+        /// <typeparam name="TData">Type of the data item, must implement <see cref="IListViewData"/>.</typeparam>
+        /// <param name="data">The data item to look up.</param>
+        /// <param name="element">The card instance if found; otherwise, null.</param>
+        /// <returns>True if the card instance is found; otherwise, false.</returns>
+        public bool TryGetDataInstance<TData>(TData data, out BaseListCard element) where TData : IListViewData
+        {
+            if (_visibleElementsMap.TryGetValue(data, out var card))
+            {
+                element = card;
+                return element != null;
+            }
+            
+            element = null;
+            return false;
+        }
+        
         //=========================================//
         // PROTECTED METHODS
         //=========================================//

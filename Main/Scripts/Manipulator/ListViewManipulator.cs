@@ -32,11 +32,6 @@ namespace Mahas.ListView
             _coroutineHolder = coroutineHolder;
             ContentDirectionType = contentDirectionType;
         }
-
-        public ListViewManipulatorProcessBuilder MoveTo<TData>(TData data, int index, float duration) where TData : IListViewData
-        {
-            return new ListViewManipulatorProcessBuilder(this, duration);
-        } 
         
         public ListViewManipulatorProcessBuilder ScrollTo<TData>(TData data, float duration) where TData : IListViewData
         {
