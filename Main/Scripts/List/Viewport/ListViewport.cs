@@ -6,11 +6,11 @@ namespace Mahas.ListView
     public class ListViewport
     {
         private readonly Dictionary<IListData, BaseListCard> _visibleElementsMap = new();
-        private readonly SortedList<int, ViewListElement> _visibleElements = new();
+        private readonly SortedList<int, ListViewElement> _visibleElements = new();
         private readonly ListListeners _listeners;
         private readonly RectOffset _paddings;
 
-        public IList<ViewListElement> VisibleElements => _visibleElements.Values;
+        public IList<ListViewElement> VisibleElements => _visibleElements.Values;
         
         /// <summary>
         /// The RectTransform associated with this ListView, representing its position and size in the UI.
@@ -76,14 +76,14 @@ namespace Mahas.ListView
         // INTERNAL METHODS
         //=========================================//
         
-        internal void AddVisibleElement(ViewListElement element)
+        internal void AddVisibleElement(ListViewElement element)
         {
             _visibleElements[element.Index] = element;
             _visibleElementsMap[element.Data] = element.Card;
             _listeners.InvokeSpawn(element);
         }
         
-        internal void RemoveVisibleElement(ViewListElement element)
+        internal void RemoveVisibleElement(ListViewElement element)
         {
             _visibleElements.Remove(element.Index);
             _visibleElementsMap.Remove(element.Data);

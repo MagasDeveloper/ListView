@@ -20,15 +20,15 @@ namespace Mahas.ListView
             collectionCheck: false,
             defaultCapacity: 20);
         
-        private readonly ObjectPool<ViewListElement> _elementsPool = new (
-            createFunc: () => new ViewListElement(),
+        private readonly ObjectPool<ListViewElement> _elementsPool = new (
+            createFunc: () => new ListViewElement(),
             actionOnGet: null,
             actionOnRelease: null,
             actionOnDestroy: null,
             collectionCheck: false,
             defaultCapacity: 20);
         
-        private readonly Dictionary<int, ViewListElement> _activeElementsMap = new(60);
+        private readonly Dictionary<int, ListViewElement> _activeElementsMap = new(60);
         private readonly List<VirtualListCard> _virtualCards = new(10);
         
         private readonly ListViewContent ViewContent;

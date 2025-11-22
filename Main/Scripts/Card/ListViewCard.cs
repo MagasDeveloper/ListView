@@ -3,7 +3,7 @@ using System;
 
 namespace Mahas.ListView
 {
-    public abstract class ViewListCard<TData> :  BaseListCard where TData : IListData
+    public abstract class ListViewCard<TData> :  BaseListCard where TData : IListData
     {
         protected TData Data { get; private set; }
         

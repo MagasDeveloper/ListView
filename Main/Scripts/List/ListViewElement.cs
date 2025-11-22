@@ -1,6 +1,6 @@
 ﻿namespace Mahas.ListView
 {
-    public class ViewListElement
+    public class ListViewElement
     {
         internal BaseListCard Card { get; private set; }
         internal IListData Data { get; private set; }
