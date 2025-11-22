@@ -81,7 +81,7 @@ To update, simply:
 3. Replace the tag in your Git URL in Package Manager:
 
 ```bash
-https://github.com/MagasDeveloper/ListView.git#v1.0.3
+https://github.com/MagasDeveloper/ListView.git#v1.0.0
 ```
 Unity will fetch the new version automatically.
 
