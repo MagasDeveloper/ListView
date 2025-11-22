@@ -3,12 +3,13 @@ ListView — High-Performance Virtualized UI List for Unity
 ## 📚 Table of Contents
 
 1. [Overview](#overview)
-2. [Data Model](#data-model)
-3. [Creating ListView Cards](#creating-list-view-cards)
-4. [Setting Up ListView](#setting-up-list-view)
-5. [Providing Data](#providing-data)
-6. [Listeners](#listeners)
-7. [Manipulator](#manipulator)
+2. [Installation](#installation)
+3. [Data Model](#data-model)
+4. [Creating ListView Cards](#creating-list-view-cards)
+5. [Setting Up ListView](#setting-up-list-view)
+6. [Providing Data](#providing-data)
+7. [Listeners](#listeners)
+8. [Manipulator](#manipulator)
 
 <h2 id="overview">✨ Overview</h2>
 
@@ -17,6 +18,72 @@ Its mission is simple: turn complex UI lists into something easier than brewing 
 No magic, no hacks — just a pleasant API and performance that doesn’t melt your profiler.
 
 <img src="Main/Preview.gif" width="900" />
+
+<h2 id="installation">📦 Installation (UPM via Git URL)</h2>
+
+ListView is distributed through GitHub Releases.
+We strongly recommend installing a specific tagged version instead of the default branch to ensure maximum stability and predictable behavior.
+
+### 🔽 1. Choose a Release Version
+
+Open the Releases section on GitHub:
+
+👉 https://github.com/MagasDeveloper/ListView/releases
+
+You will see a list of available versions (for example: v1.0.2).
+Each release contains:
+
+- a version number
+- a description of changes
+- installation instructions
+
+We recommend using the latest stable release, unless you specifically want an older version.
+
+### 🔧 2. Install the Package via Git URL
+
+In Unity, open:
+
+Window → Package Manager → Add package from Git URL
+
+Insert the URL with the selected version tag:
+
+```bash
+https://github.com/MagasDeveloper/ListView.git#v1.0.2
+```
+
+Replace v1.0.2 with any other release tag if needed.
+
+Unity will download that exact version and lock it, so your project will remain stable even if new updates are published.
+
+### 🧩 Assembly Definition Setup (If Your Project Uses asmdef)
+
+ListView is compiled into its own assembly:
+
+```bash
+Mahas.ListView
+```
+
+If your project uses Assembly Definitions, you must reference this assembly manually:
+
+1. Open your asmdef file
+2. Go to Assembly Definition References
+3. Add:
+
+   ```bash
+   Mahas.ListView
+   ```
+
+### 🔄 Updating to a New Version
+
+To update, simply:
+1. Go to Releases
+2. Pick the version you want
+3. Replace the tag in your Git URL in Package Manager:
+
+```bash
+https://github.com/MagasDeveloper/ListView.git#v1.0.3
+```
+Unity will fetch the new version automatically.
 
 <h2 id="data-model">📦 Data Model — Implementing ILisViewtData</h2>
 
