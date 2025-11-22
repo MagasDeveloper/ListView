@@ -5,7 +5,7 @@ namespace Mahas.ListView
 {
     public class ListViewport
     {
-        private readonly Dictionary<IListData, BaseListCard> _visibleElementsMap = new();
+        private readonly Dictionary<IListViewData, BaseListCard> _visibleElementsMap = new();
         private readonly SortedList<int, ListViewElement> _visibleElements = new();
         private readonly ListListeners _listeners;
         private readonly RectOffset _paddings;
@@ -43,7 +43,7 @@ namespace Mahas.ListView
         /// </summary>
         /// <param name="data">The data item to check for visibility.</param>
         /// <returns>True if the item is visible; otherwise, false.</returns>
-        public bool IsVisible<TData>(TData data) where TData : IListData
+        public bool IsVisible<TData>(TData data) where TData : IListViewData
         {
             return _visibleElementsMap.ContainsKey(data);
         }
@@ -51,12 +51,12 @@ namespace Mahas.ListView
         /// <summary>
         /// Attempts to retrieve the card instance of type <typeparamref name="TCard"/> associated with the given data item.
         /// </summary>
-        /// <typeparam name="TData">Type of the data item, must implement <see cref="IListData"/>.</typeparam>
+        /// <typeparam name="TData">Type of the data item, must implement <see cref="IListViewData"/>.</typeparam>
         /// <typeparam name="TCard">Type of the card, must inherit from <see cref="BaseListCard"/>.</typeparam>
         /// <param name="data">The data item to look up.</param>
         /// <param name="element">The card instance if found and of the correct type; otherwise, null.</param>
         /// <returns>True if the card instance is found and of type <typeparamref name="TCard"/>; otherwise, false.</returns>
-        public bool TryGetDataInstance<TData, TCard>(TData data, out TCard element) where TData : IListData where TCard : BaseListCard
+        public bool TryGetDataInstance<TData, TCard>(TData data, out TCard element) where TData : IListViewData where TCard : BaseListCard
         {
             if (_visibleElementsMap.TryGetValue(data, out var card))
             {
@@ -79,14 +79,14 @@ namespace Mahas.ListView
         internal void AddVisibleElement(ListViewElement element)
         {
             _visibleElements[element.Index] = element;
-            _visibleElementsMap[element.Data] = element.Card;
+            _visibleElementsMap[element.ViewData] = element.Card;
             _listeners.InvokeSpawn(element);
         }
         
         internal void RemoveVisibleElement(ListViewElement element)
         {
             _visibleElements.Remove(element.Index);
-            _visibleElementsMap.Remove(element.Data);
+            _visibleElementsMap.Remove(element.ViewData);
             _listeners.InvokeRecycle(element);
         }
         

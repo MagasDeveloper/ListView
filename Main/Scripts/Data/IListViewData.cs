@@ -1,6 +1,6 @@
 ﻿namespace Mahas.ListView
 {
-    public interface IListData
+    public interface IListViewData
     {
     }
 }

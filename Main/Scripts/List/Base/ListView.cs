@@ -102,7 +102,7 @@ namespace Mahas.ListView
         /// </summary>
         /// <param name="data">The collection of data items to display.</param>
         /// <param name="forceUpdate">If true, forces an immediate update of the list view after setting the data.</param>
-        public void SetupData(IEnumerable<IListData> data, bool forceUpdate = true)
+        public void SetupData(IEnumerable<IListViewData> data, bool forceUpdate = true)
         {
             ViewBrain.SetupData(data);
             if (forceUpdate)
@@ -114,13 +114,13 @@ namespace Mahas.ListView
         /// <summary>
         /// Removes a specific data item from the list view.
         /// </summary>
-        /// <param name="data">The data item to remove.</param>
+        /// <param name="viewData">The data item to remove.</param>
         /// <param name="forceUpdate">
         /// If true, forces an immediate update of the list view after removing the data.
         /// </param>
-        public void RemoveData(IListData data, bool forceUpdate = true)
+        public void RemoveData(IListViewData viewData, bool forceUpdate = true)
         {
-            ViewBrain.RemoveData(data);
+            ViewBrain.RemoveData(viewData);
             if (forceUpdate)
             {
                 ViewBrain.TryUpdate(true);

@@ -65,15 +65,15 @@ namespace Mahas.ListView
         // INTERNAL METHODS
         //=========================================//
         
-        internal void SetupData(IEnumerable<IListData> data)
+        internal void SetupData(IEnumerable<IListViewData> data)
         {
             DataProvider.SetupData(data);
             Rebuild();
         }
         
-        internal void RemoveData(IListData data)
+        internal void RemoveData(IListViewData viewData)
         {
-            DataProvider.Remove(data);
+            DataProvider.Remove(viewData);
             BakeCardRects();
             ResizeContent();
         }
@@ -337,13 +337,13 @@ namespace Mahas.ListView
 
         private void OnCardBecameVisible(VirtualListCard virtualCard)
         {
-            IListData data = DataProvider.Items.ElementAt(virtualCard.Index);
+            IListViewData viewData = DataProvider.Items.ElementAt(virtualCard.Index);
 
-            var instance = _poolMap.Get(data.GetType());
+            var instance = _poolMap.Get(viewData.GetType());
             instance.ApplyVirtualRect(virtualCard.Rect, ViewContent.RectTransform);
             
             var element = _elementsPool.Get();
-            element.Initialize(instance, data, virtualCard.Index);
+            element.Initialize(instance, viewData, virtualCard.Index);
 
             if (instance.IsNewlyCreated)
             {
@@ -352,7 +352,7 @@ namespace Mahas.ListView
                 instance.UnsetAsNew();
             }
 
-            instance.SetData(data);
+            instance.SetData(viewData);
             instance.InvokeSpawn();
             Viewport.AddVisibleElement(element);
             _activeElementsMap[virtualCard.Index] = element;

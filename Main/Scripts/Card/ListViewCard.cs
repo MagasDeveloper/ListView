@@ -3,7 +3,7 @@ using System;
 
 namespace Mahas.ListView
 {
-    public abstract class ListViewCard<TData> :  BaseListCard where TData : IListData
+    public abstract class ListViewCard<TData> :  BaseListCard where TData : IListViewData
     {
         protected TData Data { get; private set; }
         
@@ -11,11 +11,11 @@ namespace Mahas.ListView
         // INTERNAL METHODS
         //=========================================//
         
-        internal override void SetData(IListData data)
+        internal override void SetData(IListViewData viewData)
         {
-            if (data is not TData cardData)
+            if (viewData is not TData cardData)
             {
-                Debug.LogError($"RectListCard: Data type mismatch. Expected {typeof(TData)}, but got {data.GetType()}");
+                Debug.LogError($"RectListCard: Data type mismatch. Expected {typeof(TData)}, but got {viewData.GetType()}");
                 return;
             }
             Data = cardData;

@@ -3,7 +3,7 @@
     public class ListViewElement
     {
         internal BaseListCard Card { get; private set; }
-        internal IListData Data { get; private set; }
+        internal IListViewData ViewData { get; private set; }
         
         public int Index { get; private set; }
         
@@ -11,10 +11,10 @@
         // INTERNAL METHODS
         //=========================================//
         
-        internal void Initialize(BaseListCard card, IListData data, int index)
+        internal void Initialize(BaseListCard card, IListViewData viewData, int index)
         {
             Card = card;
-            Data = data;
+            ViewData = viewData;
             Index = index;
         }
         
@@ -27,11 +27,11 @@
         /// </summary>
         /// <typeparam name="TData"></typeparam>
         /// <returns></returns>
-        public TData GetData<TData>() where TData : IListData
+        public TData GetData<TData>() where TData : IListViewData
         {
-            if (Data is not TData typedData)
+            if (ViewData is not TData typedData)
             {
-                UnityEngine.Debug.LogError($"ListElement: Data type mismatch. Expected {typeof(TData)}, but got {Data.GetType()}");
+                UnityEngine.Debug.LogError($"ListElement: Data type mismatch. Expected {typeof(TData)}, but got {ViewData.GetType()}");
                 return default;
             }
             return typedData;
@@ -76,10 +76,10 @@
         /// <typeparam name="TData">Target data type.</typeparam>
         /// <param name="result">On return, contains the cast data if successful; otherwise the default value for <typeparamref name="TData"/>.</param>
         /// <returns>True if the data is of type <typeparamref name="TData"/>; otherwise false.</returns>
-        public bool TryGetData<TData>(out TData result) where TData : IListData
+        public bool TryGetData<TData>(out TData result) where TData : IListViewData
         {
             result = default;
-            if (Data is TData typedData)
+            if (ViewData is TData typedData)
             {
                 result = typedData;
                 return true;
@@ -89,13 +89,13 @@
         }
         
         /// <summary>
-        /// Checks if the current <see cref="Data"/> instance is of type <typeparamref name="TData"/>.
+        /// Checks if the current <see cref="ViewData"/> instance is of type <typeparamref name="TData"/>.
         /// </summary>
-        /// <typeparam name="TData">Target data type implementing <see cref="IListData"/>.</typeparam>
-        /// <returns>True if <see cref="Data"/> is of type <typeparamref name="TData"/>; otherwise false.</returns>
-        public bool IsDataType<TData>() where TData : IListData
+        /// <typeparam name="TData">Target data type implementing <see cref="IListViewData"/>.</typeparam>
+        /// <returns>True if <see cref="ViewData"/> is of type <typeparamref name="TData"/>; otherwise false.</returns>
+        public bool IsDataType<TData>() where TData : IListViewData
         {
-            return Data is TData;
+            return ViewData is TData;
         }
         
         /// <summary>

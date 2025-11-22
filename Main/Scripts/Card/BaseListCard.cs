@@ -62,7 +62,7 @@ namespace Mahas.ListView
         //=========================================//
 
         internal abstract Type GetDataType();
-        internal abstract void SetData(IListData data);
+        internal abstract void SetData(IListViewData viewData);
         internal void InvokeCreate() => OnCreate();
         internal void InvokeSpawn() => OnSpawn();
         internal void InvokeRecycle() => OnRecycle();
