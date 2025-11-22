@@ -1,6 +1,6 @@
 {
   "name": "com.mahas.listview",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "displayName": "ListView",
   "description": "High-performance virtualized ListView for Unity UI with item recycling, optimized rendering and smooth scrolling for large datasets.",
   "unity": "2021.3",
