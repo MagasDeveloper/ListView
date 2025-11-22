@@ -1,13 +1,13 @@
 {
   "name": "com.mahas.listview",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "displayName": "ListView",
   "description": "High-performance virtualized ListView for Unity UI with item recycling, optimized rendering and smooth scrolling for large datasets.",
   "unity": "2021.3",
   "author": {
     "name": "Dmytro Mahas",
     "email": "magas.dm99@gmail.com",
-    "url": "https://github.com/your/repo"
+    "url": "https://github.com/MagasDeveloper/ListView.git"
   },
   "license": "MIT",
   "dependencies": {
@@ -18,5 +18,5 @@
     "plugin",
 	"listview"
   ],
-  "documentationUrl": "https://your-docs-url.com"
+  "documentationUrl": "https://github.com/MagasDeveloper/ListView#readme"
 }
