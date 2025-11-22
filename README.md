@@ -51,7 +51,7 @@ Insert the URL with the selected version tag:
 https://github.com/MagasDeveloper/ListView.git#v1.0.0
 ```
 
-Replace v1.0.2 with any other release tag if needed.
+Replace v1.0.0 with any other release tag if needed.
 
 Unity will download that exact version and lock it, so your project will remain stable even if new updates are published.
 
