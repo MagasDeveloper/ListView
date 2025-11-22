@@ -5,10 +5,10 @@ namespace Mahas.ListView
     public class ListDataProvider
     {
         private readonly Dictionary<IListData, int> _indexedData = new();
-        private readonly List<IListData> _data = new();
+        private readonly List<IListData> _items = new();
 
         
-        public IReadOnlyList<IListData> Data => _data;
+        public IReadOnlyList<IListData> Items => _items;
         
         //=========================================//
         // INTERNAL METHODS
@@ -16,24 +16,26 @@ namespace Mahas.ListView
         
         internal void SetupData(IEnumerable<IListData> data)
         {
-            _data.Clear();
-            _data.AddRange(data);
+            _items.Clear();
+            _items.AddRange(data);
             
             _indexedData.Clear();
-            for (int i = 0; i < _data.Count; i++)
+            for (int i = 0; i < _items.Count; i++)
             {
-                _indexedData[_data[i]] = i;
+                _indexedData[_items[i]] = i;
             }
         }
         
         internal void Remove(IListData data)
         {
-            _data.Remove(data);
+            _items.Remove(data);
+            _indexedData.Remove(data);
         }
         
         internal void Clear()
         {
-            _data.Clear();
+            _items.Clear();
+            _indexedData.Clear();
         }
         
         internal int GetDataIndex(IListData data)

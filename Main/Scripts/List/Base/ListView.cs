@@ -96,17 +96,56 @@ namespace Mahas.ListView
         {
             ViewBrain.SetKeepSiblingIndex(isActive);
         }
-        
+
         /// <summary>
         /// Sets up the data collection that will be displayed in the list.
         /// </summary>
         /// <param name="data">The collection of data items to display.</param>
-        public void SetupData(IEnumerable<IListData> data)
+        /// <param name="forceUpdate">If true, forces an immediate update of the list view after setting the data.</param>
+        public void SetupData(IEnumerable<IListData> data, bool forceUpdate = true)
         {
             ViewBrain.SetupData(data);
+            if (forceUpdate)
+            {
+                ViewBrain.TryUpdate(true);
+            }
+        }
+        
+        /// <summary>
+        /// Removes a specific data item from the list view.
+        /// </summary>
+        /// <param name="data">The data item to remove.</param>
+        /// <param name="forceUpdate">
+        /// If true, forces an immediate update of the list view after removing the data.
+        /// </param>
+        public void RemoveData(IListData data, bool forceUpdate = true)
+        {
+            ViewBrain.RemoveData(data);
+            if (forceUpdate)
+            {
+                ViewBrain.TryUpdate(true);
+            }
+        }
+        
+        /// <summary>
+        /// Clears all data from the list view.
+        /// </summary>
+        /// <param name="forceUpdate">
+        /// If true, forces an immediate update of the list view after clearing the data.
+        /// </param>
+        public void ClearData(bool forceUpdate = true)
+        {
+            ViewBrain.ClearData();
+            if (forceUpdate)
+            {
+                ViewBrain.TryUpdate(true);
+            }
         }
 
-        public void Rebuild()
+        /// <summary>
+        /// Forces an immediate update of the list view, recalculating visible elements.
+        /// </summary>
+        public void ForceUpdate()
         {
             ViewBrain.TryUpdate(true);
         }
@@ -196,7 +235,7 @@ namespace Mahas.ListView
                     
                     Gizmos.DrawCube(Vector3.zero, size);
 
-                    if (ViewBrain.DataProvider.Data.ElementAt(index) is IHaveMessageForGizmo debugMessage)
+                    if (ViewBrain.DataProvider.Items.ElementAt(index) is IHaveMessageForGizmo debugMessage)
                     {
                         GUIStyle style = new GUIStyle
                         {

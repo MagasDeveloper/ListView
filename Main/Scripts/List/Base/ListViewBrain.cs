@@ -60,6 +60,30 @@ namespace Mahas.ListView
             _cardPrefabs = cardVariants.Select(x => x.Prefab).ToArray();
             _poolMap = new ObjectPoolMap(cardVariants, _instantiator, viewContent.RectTransform, 10);
         }
+        
+        //=========================================//
+        // INTERNAL METHODS
+        //=========================================//
+        
+        internal void SetupData(IEnumerable<IListData> data)
+        {
+            DataProvider.SetupData(data);
+            Rebuild();
+        }
+        
+        internal void RemoveData(IListData data)
+        {
+            DataProvider.Remove(data);
+            BakeCardRects();
+            ResizeContent();
+        }
+        
+        internal void ClearData()
+        {
+            DataProvider.Clear();
+            BakeCardRects();
+            ResizeContent();
+        }
 
         internal void TryUpdate(bool forceUpdate = false, bool canRetry = true)
         {
@@ -142,78 +166,13 @@ namespace Mahas.ListView
             _keepSiblingOrder = isActive;
         }
 
-        internal void SetupData(IEnumerable<IListData> data)
-        {
-            _isStaticListElements = IsStaticListElements(data);
-            if (_isStaticListElements)
-            {
-                _defaultCardSize = GetDefaultCardSize();
-            }
-            
-            DataProvider.SetupData(data);
-            BakeCardRects();
-            ResizeContent();
-        }
-
-        private void ResizeContent()
-        {
-            if (DataProvider.Data == null)
-            {
-                return;
-            }
-
-            Vector2 contentSize = default;
-            int count = DataProvider.Data.Count;
-            var data = DataProvider.Data;
-            
-            if (!_isStaticListElements)
-            {
-                Vector2 rawSize = new Vector2();
-                foreach (var item in data)
-                {
-                    Vector2 size;
-                    if (item is IHaveCustomListSize customListSize)
-                    {
-                        size = customListSize.GetCustomSize();
-                    }
-                    else
-                    {
-                        size = _poolMap.GetPrefabSize(item.GetType());
-                    }
-
-                    rawSize += size;
-                }
-                BuildVectorSize(rawSize);
-            }
-            else
-            {
-                BuildVectorSize(_defaultCardSize * count);
-            }
-            
-            var paddings = ViewContent.Paddings;
-            contentSize += new Vector2(paddings.left + paddings.right, paddings.top + paddings.bottom);
-            ViewContent.RectTransform.sizeDelta = contentSize;
-
-            void BuildVectorSize(Vector2 size)
-            {
-                float totalSpacing = ViewContent.Spacing * (count - 1);
-                switch (ViewContent.Direction)
-                {
-                    case ContentDirectionType.Horizontal:
-                        contentSize.x = size.x + totalSpacing;
-                        contentSize.y = GetDefaultCardSize().y;
-                        break;
-                    case ContentDirectionType.Vertical:
-                        contentSize.x = GetDefaultCardSize().x;
-                        contentSize.y = size.y + totalSpacing;
-                        break;
-                }
-            }
-        }
-
+        //=========================================//
+        // PRIVATE METHODS
+        //=========================================//
+        
         private  Rect[] GetCardsRect()
         {
-            var data = DataProvider.Data;
+            var data = DataProvider.Items;
             int count = data.Count;
             var rects = new Rect[count];
 
@@ -271,12 +230,68 @@ namespace Mahas.ListView
                 }
             }
         }
-        
-        protected bool IsStaticListElements(IEnumerable<IListData> data)
+
+        private void ResizeContent()
+        {
+            if (DataProvider.Items == null)
+            {
+                return;
+            }
+
+            Vector2 contentSize = default;
+            int count = DataProvider.Items.Count;
+            var data = DataProvider.Items;
+            
+            if (!_isStaticListElements)
+            {
+                Vector2 rawSize = new Vector2();
+                foreach (var item in data)
+                {
+                    Vector2 size;
+                    if (item is IHaveCustomListSize customListSize)
+                    {
+                        size = customListSize.GetCustomSize();
+                    }
+                    else
+                    {
+                        size = _poolMap.GetPrefabSize(item.GetType());
+                    }
+
+                    rawSize += size;
+                }
+                BuildVectorSize(rawSize);
+            }
+            else
+            {
+                BuildVectorSize(_defaultCardSize * count);
+            }
+            
+            var paddings = ViewContent.Paddings;
+            contentSize += new Vector2(paddings.left + paddings.right, paddings.top + paddings.bottom);
+            ViewContent.RectTransform.sizeDelta = contentSize;
+
+            void BuildVectorSize(Vector2 size)
+            {
+                float totalSpacing = ViewContent.Spacing * (count - 1);
+                switch (ViewContent.Direction)
+                {
+                    case ContentDirectionType.Horizontal:
+                        contentSize.x = size.x + totalSpacing;
+                        contentSize.y = GetDefaultCardSize().y;
+                        break;
+                    case ContentDirectionType.Vertical:
+                        contentSize.x = GetDefaultCardSize().x;
+                        contentSize.y = size.y + totalSpacing;
+                        break;
+                }
+            }
+        }
+
+        private bool IsStaticListElements()
         {
             Type firstType = null;
 
-            foreach (var item in data)
+            foreach (var item in DataProvider.Items)
             {
                 if (item == null)
                     continue;
@@ -319,14 +334,10 @@ namespace Mahas.ListView
                 _virtualCards.Add(virtualCard);
             }
         }
-        
-        //=========================================//
-        // PRIVATE METHODS
-        //=========================================//
-        
+
         private void OnCardBecameVisible(VirtualListCard virtualCard)
         {
-            IListData data = DataProvider.Data.ElementAt(virtualCard.Index);
+            IListData data = DataProvider.Items.ElementAt(virtualCard.Index);
 
             var instance = _poolMap.Get(data.GetType());
             instance.ApplyVirtualRect(virtualCard.Rect, ViewContent.RectTransform);
@@ -371,6 +382,18 @@ namespace Mahas.ListView
                 element.Card.SetSiblingIndex(index++);
             }
             
+        }
+
+        private void Rebuild()
+        {
+            _isStaticListElements = IsStaticListElements();
+            if (_isStaticListElements)
+            {
+                _defaultCardSize = GetDefaultCardSize();
+            }
+            
+            BakeCardRects();
+            ResizeContent();
         }
         
     }
