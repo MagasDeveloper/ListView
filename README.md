@@ -30,7 +30,7 @@ Open the Releases section on GitHub:
 
 👉 https://github.com/MagasDeveloper/ListView/releases
 
-You will see a list of available versions (for example: v1.0.2).
+You will see a list of available versions (for example: v1.0.0).
 Each release contains:
 
 - a version number
@@ -48,7 +48,7 @@ Window → Package Manager → Add package from Git URL
 Insert the URL with the selected version tag:
 
 ```bash
-https://github.com/MagasDeveloper/ListView.git#v1.0.2
+https://github.com/MagasDeveloper/ListView.git#v1.0.0
 ```
 
 Replace v1.0.2 with any other release tag if needed.
