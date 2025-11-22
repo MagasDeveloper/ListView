@@ -16,6 +16,8 @@ ListView is a high-performance virtualized list component for Unity, built for d
 Its mission is simple: turn complex UI lists into something easier than brewing your morning coffee.
 No magic, no hacks — just a pleasant API and performance that doesn’t melt your profiler.
 
+<img src="Main/Preview.gif" width="900" />
+
 <h2 id="data-model">📦 Data Model — Implementing ILisViewtData</h2>
 
 Every item displayed in ListView must implement the ILisViewtData interface.
@@ -361,7 +363,7 @@ await _listView.Manipulator
 
 All available thanks to the process builder in ListViewManipulatorProcessBuilder
 
-###📐 Alignment Options
+### 📐 Alignment Options
 
 Manipulator supports aligning the target element to:
 
