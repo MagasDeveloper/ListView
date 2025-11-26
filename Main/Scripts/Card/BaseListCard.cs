@@ -75,12 +75,17 @@ namespace Mahas.ListView
 
         internal void ApplyVirtualRect(Rect virtualRect, RectTransform content)
         {
+            if (IsNewlyCreated)
+            {
+                NormalizeCardTransform();
+            }
+            
             RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, virtualRect.width);
             RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,   virtualRect.height);
 
             Vector2 parentSize = content.rect.size;
             Vector2 parentMin  = -content.pivot * parentSize;
-            Vector2 anchorCenter = parentMin + Vector2.Scale((RectTransform.anchorMin + RectTransform.anchorMax) * 0.5f, parentSize);
+            Vector2 anchorCenter = parentMin + Vector2.Scale((RectTransform.anchorMin + RectTransform.anchorMax) * RectTransform.pivot, parentSize);
             Vector2 parentTopLeft = new Vector2(content.rect.xMin, content.rect.yMax);
             
             Vector2 childPivotLocal = parentTopLeft + new Vector2(
@@ -97,6 +102,18 @@ namespace Mahas.ListView
         //=========================================//
         // PRIVATE METHODS
         //=========================================//
+        
+        private void NormalizeCardTransform()
+        {
+            var center = new Vector2(0.5f, 0.5f);
+            RectTransform.anchorMin = center;
+            RectTransform.anchorMax = center;
+            RectTransform.pivot     = center;
+
+            RectTransform.anchoredPosition3D = Vector3.zero;
+            RectTransform.localScale = Vector3.one;
+            RectTransform.localRotation = Quaternion.identity;
+        }
         
         
     }
