@@ -82,8 +82,8 @@ namespace Mahas.ListView
         /// <summary>
         /// Sets the custom instantiator used by the RectList content to create card instances.
         /// </summary>
-        /// <param name="instantiator">The instantiator implementing <see cref="IObjectInstantiator"/>.</param>
-        public void SetInstantiator(IObjectInstantiator instantiator)
+        /// <param name="instantiator">The instantiator implementing <see cref="ICardInstantiator"/>.</param>
+        public void SetInstantiator(ICardInstantiator instantiator)
         {
             ViewBrain.SetInstantiator(instantiator);
         }

@@ -2,7 +2,7 @@
 
 namespace Mahas.ListView
 {
-    public class ObjectInstantiator : IObjectInstantiator
+    public class CardInstantiator : ICardInstantiator
     {
         
         //=========================================//

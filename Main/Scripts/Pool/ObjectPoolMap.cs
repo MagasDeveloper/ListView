@@ -9,7 +9,7 @@ namespace Mahas.ListView
         private readonly Dictionary<Type, CardsPool> _poolsMap = new();
         private readonly Dictionary<Type, BaseListCard> _prefabsMap = new();
         
-        internal ObjectPoolMap(PrefabListVariant[] variants, IObjectInstantiator instantiator, Transform content, int defaultCapacity)
+        internal ObjectPoolMap(PrefabListVariant[] variants, ICardInstantiator instantiator, Transform content, int defaultCapacity)
         {
             foreach (var variant in variants)
             {

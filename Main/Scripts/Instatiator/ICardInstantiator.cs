@@ -2,7 +2,7 @@
 
 namespace Mahas.ListView
 {
-    public interface IObjectInstantiator
+    public interface ICardInstantiator
     {
         TInstance Instantiate<TInstance>(Object prefab, Transform parent) where TInstance : Object;
     }

@@ -6,11 +6,11 @@ namespace Mahas.ListView
     public class CardsPool
     {
         private readonly ObjectPool<BaseListCard> _pool;
-        private readonly IObjectInstantiator _instantiator;
+        private readonly ICardInstantiator _instantiator;
         private readonly BaseListCard _prefab;
         private readonly Transform _content;
 
-        public CardsPool(IObjectInstantiator instantiator, PrefabListVariant variant, Transform content, int defaultCapacity)
+        public CardsPool(ICardInstantiator instantiator, PrefabListVariant variant, Transform content, int defaultCapacity)
         {
             _instantiator = instantiator;
             _content = content;

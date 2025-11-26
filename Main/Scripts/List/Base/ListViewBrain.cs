@@ -40,7 +40,7 @@ namespace Mahas.ListView
         private List<VirtualListCard> _visibleNow = new(10);
         private List<VirtualListCard> _visiblePrev = new(10);
 
-        private IObjectInstantiator _instantiator;
+        private ICardInstantiator _instantiator;
 
         private Vector2 _lastContentPos;
         private Vector2 _defaultCardSize;
@@ -55,7 +55,7 @@ namespace Mahas.ListView
             ViewContent = viewContent;
             Viewport = viewport;
             _listeners = listeners;
-            _instantiator = new ObjectInstantiator();
+            _instantiator = new CardInstantiator();
             _keepSiblingOrder = keepSiblingOrder;
             _cardPrefabs = cardVariants.Select(x => x.Prefab).ToArray();
             _poolMap = new ObjectPoolMap(cardVariants, _instantiator, viewContent.RectTransform, 10);
@@ -156,7 +156,7 @@ namespace Mahas.ListView
             return _virtualCards;
         }
 
-        internal void SetInstantiator(IObjectInstantiator instantiator)
+        internal void SetInstantiator(ICardInstantiator instantiator)
         {
             _instantiator = instantiator;
         }
