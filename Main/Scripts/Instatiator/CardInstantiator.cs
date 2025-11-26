@@ -4,7 +4,6 @@ namespace Mahas.ListView
 {
     public class CardInstantiator : ICardInstantiator
     {
-        
         //=========================================//
         // PUBLIC METHODS
         //=========================================//

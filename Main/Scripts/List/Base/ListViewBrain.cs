@@ -68,21 +68,50 @@ namespace Mahas.ListView
         internal void SetupData(IEnumerable<IListViewData> data)
         {
             DataProvider.SetupData(data);
-            Rebuild();
+        }
+        
+        internal void AddData(IListViewData viewData)
+        {
+            DataProvider.AddData(viewData);
         }
         
         internal void RemoveData(IListViewData viewData)
         {
-            DataProvider.Remove(viewData);
-            BakeCardRects();
-            ResizeContent();
+            DataProvider.RemoveData(viewData);
         }
         
         internal void ClearData()
         {
             DataProvider.Clear();
+        }
+        
+        internal void Rebuild()
+        {
+            _hasLastPos = false;
+            _lastVisibleStartIndex = 0;
+            ResetPrevProgress(_visibleNow);
+            ResetPrevProgress(_visiblePrev);
+            
+            _isStaticListElements = IsStaticListElements();
+            if (_isStaticListElements)
+            {
+                _defaultCardSize = GetDefaultCardSize();
+            }
+            
             BakeCardRects();
             ResizeContent();
+
+            void ResetPrevProgress(List<VirtualListCard> progress)
+            {
+                foreach (var item in progress)
+                {
+                    if (!_activeElementsMap.ContainsKey(item.Index))
+                        continue;
+                    
+                    OnCardBecameInvisible(item);
+                }
+                progress.Clear();
+            }
         }
 
         internal void TryUpdate(bool forceUpdate = false, bool canRetry = true)
@@ -170,7 +199,7 @@ namespace Mahas.ListView
         // PRIVATE METHODS
         //=========================================//
         
-        private  Rect[] GetCardsRect()
+        private Rect[] GetCardsRect()
         {
             var data = DataProvider.Items;
             int count = data.Count;
@@ -383,18 +412,5 @@ namespace Mahas.ListView
             }
             
         }
-
-        private void Rebuild()
-        {
-            _isStaticListElements = IsStaticListElements();
-            if (_isStaticListElements)
-            {
-                _defaultCardSize = GetDefaultCardSize();
-            }
-            
-            BakeCardRects();
-            ResizeContent();
-        }
-        
     }
 }

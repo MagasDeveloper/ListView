@@ -101,13 +101,29 @@ namespace Mahas.ListView
         /// Sets up the data collection that will be displayed in the list.
         /// </summary>
         /// <param name="data">The collection of data items to display.</param>
-        /// <param name="forceUpdate">If true, forces an immediate update of the list view after setting the data.</param>
-        public void SetupData(IEnumerable<IListViewData> data, bool forceUpdate = true)
+        /// <param name="autoRebuild">If true, forces an immediate update of the list view after setting the data.</param>
+        public void SetupData(IEnumerable<IListViewData> data, bool autoRebuild = true)
         {
             ViewBrain.SetupData(data);
-            if (forceUpdate)
+            if (autoRebuild)
             {
-                ViewBrain.TryUpdate(true);
+                Rebuild();
+            }
+        }
+        
+        /// <summary>
+        /// Adds a new data item to the list view.
+        /// </summary>
+        /// <param name="data">The data item to add.</param>
+        /// <param name="autoRebuild">
+        /// If true, forces an immediate update of the list view after adding the data.
+        /// </param>
+        public void AddData(IListViewData data, bool autoRebuild = true)
+        {
+            ViewBrain.AddData(data);
+            if (autoRebuild)
+            {
+                Rebuild();
             }
         }
         
@@ -115,39 +131,31 @@ namespace Mahas.ListView
         /// Removes a specific data item from the list view.
         /// </summary>
         /// <param name="viewData">The data item to remove.</param>
-        /// <param name="forceUpdate">
+        /// <param name="autoRebuild">
         /// If true, forces an immediate update of the list view after removing the data.
         /// </param>
-        public void RemoveData(IListViewData viewData, bool forceUpdate = true)
+        public void RemoveData(IListViewData viewData, bool autoRebuild = true)
         {
             ViewBrain.RemoveData(viewData);
-            if (forceUpdate)
+            if (autoRebuild)
             {
-                ViewBrain.TryUpdate(true);
+                Rebuild();
             }
         }
         
         /// <summary>
         /// Clears all data from the list view.
         /// </summary>
-        /// <param name="forceUpdate">
+        /// <param name="autoRebuild">
         /// If true, forces an immediate update of the list view after clearing the data.
         /// </param>
-        public void ClearData(bool forceUpdate = true)
+        public void ClearData(bool autoRebuild = true)
         {
             ViewBrain.ClearData();
-            if (forceUpdate)
+            if (autoRebuild)
             {
-                ViewBrain.TryUpdate(true);
+                Rebuild();
             }
-        }
-
-        /// <summary>
-        /// Forces an immediate update of the list view, recalculating visible elements.
-        /// </summary>
-        public void ForceUpdate()
-        {
-            ViewBrain.TryUpdate(true);
         }
 
         /// <summary>
@@ -160,6 +168,12 @@ namespace Mahas.ListView
             {
                 element.Card.Refresh();
             }
+        }
+
+        public void Rebuild()
+        {
+            ViewBrain.Rebuild();
+            ViewBrain.TryUpdate(true);
         }
         
         //=========================================//

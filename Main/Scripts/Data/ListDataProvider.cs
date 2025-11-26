@@ -26,7 +26,13 @@ namespace Mahas.ListView
             }
         }
         
-        internal void Remove(IListViewData viewData)
+        public void AddData(IListViewData viewData)
+        {
+            _items.Add(viewData);
+            _indexedData[viewData] = _items.Count - 1;
+        }
+        
+        internal void RemoveData(IListViewData viewData)
         {
             _items.Remove(viewData);
             _indexedData.Remove(viewData);
