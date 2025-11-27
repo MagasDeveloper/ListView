@@ -30,6 +30,7 @@ namespace Mahas.ListView
         public ListViewContent Content { get; private set; }
         public ListViewport Viewport { get; private set; }
         
+        public IReadOnlyList<IListViewData> Collection => ViewBrain.DataProvider.Items;
         public bool KeepSiblingOrder => _otherSettings.KeepSiblingOrder;
         public bool IsEnableGizmo => _otherSettings.IsEnableGizmo;
         
