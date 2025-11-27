@@ -171,6 +171,11 @@ namespace Mahas.ListView
             }
         }
 
+        /// <summary>
+        /// Rebuilds the list view, updating the layout and visibility of elements.
+        /// This method forces the ViewBrain to recalculate which elements should be visible
+        /// based on the current scroll position and content size.
+        /// </summary>
         public void Rebuild()
         {
             ViewBrain.Rebuild();
