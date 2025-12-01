@@ -7,22 +7,22 @@ namespace Mahas.ListView
         public Rect Rect { get; private set; }
         public int Index { get; private set; }
         public Vector2 Position => new (Rect.x, Rect.y);
-        public bool IsVisible { get; private set; }
+        public VirtualListCardState State { get; private set; } 
 
         //=========================================//
         // PUBLIC METHODS
         //=========================================//
         
-        public void Setup(Rect rect, int index)
+        internal void Setup(Rect rect, int index)
         {
             Rect = rect;
             Index = index;
-            IsVisible = false;
+            SetState(VirtualListCardState.Disabled);
         }
-
-        public void SetVisible(bool isVisible)
+        
+        internal void SetState(VirtualListCardState state)
         {
-            IsVisible = isVisible;
+            State = state;
         }
         
         //=========================================//

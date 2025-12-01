@@ -1,10 +1,14 @@
-﻿namespace Mahas.ListView
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace Mahas.ListView
 {
     public class ListViewElement
     {
         internal BaseListCard Card { get; private set; }
         internal IListViewData ViewData { get; private set; }
-        
+        internal CancellationTokenSource RecycleCTS;
+        internal Task RecycleTask;
         public int Index { get; private set; }
         
         //=========================================//
@@ -109,8 +113,18 @@
         }
         
         //=========================================//
-        // PRIVATE METHODS
+        // INTERNAL METHODS
         //=========================================//
+        
+        internal void CancelRecycle()
+        {
+            if (RecycleCTS != null)
+            {
+                RecycleCTS.Cancel();
+                RecycleCTS.Dispose();
+                RecycleCTS = null;
+            }
+        }
         
     }
 }

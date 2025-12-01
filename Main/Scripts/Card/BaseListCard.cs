@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Mahas.ListView
 {
@@ -11,6 +13,8 @@ namespace Mahas.ListView
         internal bool IsNewlyCreated { get; private set; }
 
         internal RectTransform RectTransform => _rectTransform;
+        
+        private Task _recycleTask;
         
         /// <summary>
         /// Gets the size of the card as a <see cref="Vector2"/> representing the width and height.
@@ -56,6 +60,11 @@ namespace Mahas.ListView
         /// Override to implement logic for when the card exits the view.
         /// </summary>
         protected virtual void OnRecycle() {}
+
+        protected virtual Task ProcessRecycle(CancellationToken token)
+        {
+            return Task.CompletedTask;
+        }
         
         //=========================================//
         // INTERNAL METHODS
@@ -67,6 +76,11 @@ namespace Mahas.ListView
         internal void InvokeSpawn() => OnSpawn();
         internal void InvokeRecycle() => OnRecycle();
         internal void Refresh() => OnRefresh();
+
+        internal Task InvokeProcessRecycle(CancellationToken cancellationToken) => ProcessRecycle(cancellationToken);
+        internal void InvokeDelete() => OnDelete();
+        internal void SetAsNew() => IsNewlyCreated = true;
+        internal void UnsetAsNew() => IsNewlyCreated = false;
 
         internal void SetSiblingIndex(int index)
         {
@@ -95,9 +109,7 @@ namespace Mahas.ListView
 
             RectTransform.anchoredPosition = childPivotLocal - anchorCenter;
         }
-
-        internal void SetAsNew() => IsNewlyCreated = true;
-        internal void UnsetAsNew() => IsNewlyCreated = false;
+        
         
         //=========================================//
         // PRIVATE METHODS

@@ -243,15 +243,34 @@ namespace Mahas.ListView
                     Vector3 size = new Vector3(card.Rect.width, card.Rect.height, 0f);
 
                     Gizmos.matrix = Matrix4x4.TRS(worldCenter, content.rotation, content.lossyScale);
-                    Gizmos.color = card.IsVisible 
-                        ? new Color(0f, 1f, 0f) 
-                        : new Color(1f, 0.1f, 0f);
+
+                    switch (card.State)
+                    {
+                        case VirtualListCardState.Disabled:
+                            Gizmos.color = new Color(1f, 0.1f, 0f);
+                            break;
+                        case VirtualListCardState.Enabled:
+                            Gizmos.color = new Color(0f, 1f, 0f);
+                            break;
+                        case VirtualListCardState.WaitingForRecycle:
+                            Gizmos.color = new Color(1f, 0.65f, 0f);
+                            break;
+                    }
                     
                     Gizmos.DrawWireCube(Vector3.zero, size);
-
-                    Gizmos.color = card.IsVisible
-                        ? new Color(0f, 1f, 0f, 0.4f)
-                        : new Color(1f, 0.1f, 0f, 0.4f);
+                    
+                    switch (card.State)
+                    {
+                        case VirtualListCardState.Disabled:
+                            Gizmos.color = new Color(1f, 0.1f, 0f, 0.4f);
+                            break;
+                        case VirtualListCardState.Enabled:
+                            Gizmos.color = new Color(0f, 1f, 0f, 0.4f);
+                            break;
+                        case VirtualListCardState.WaitingForRecycle:
+                            Gizmos.color = new Color(1f, 0.65f, 0f, 0.5f);
+                            break;
+                    }
                     
                     Gizmos.DrawCube(Vector3.zero, size);
 

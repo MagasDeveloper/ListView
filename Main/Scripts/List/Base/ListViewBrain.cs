@@ -3,6 +3,8 @@ using UnityEngine.Pool;
 using UnityEngine;
 using System.Linq;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Mahas.ListView
 {
@@ -89,29 +91,26 @@ namespace Mahas.ListView
         {
             _hasLastPos = false;
             _lastVisibleStartIndex = 0;
-            ResetPrevProgress(_visibleNow);
-            ResetPrevProgress(_visiblePrev);
-            
+
+            foreach (var kvp in _activeElementsMap)
+            {
+                var index = kvp.Key;
+                var virtualCard = _virtualCards[index];
+                HardRecycle(virtualCard);
+            }
+            _activeElementsMap.Clear();
+
+            _visibleNow.Clear();
+            _visiblePrev.Clear();
+
             _isStaticListElements = IsStaticListElements();
             if (_isStaticListElements)
             {
                 _defaultCardSize = GetDefaultCardSize();
             }
-            
+
             BakeCardRects();
             ResizeContent();
-
-            void ResetPrevProgress(List<VirtualListCard> progress)
-            {
-                foreach (var item in progress)
-                {
-                    if (!_activeElementsMap.ContainsKey(item.Index))
-                        continue;
-                    
-                    OnCardBecameInvisible(item);
-                }
-                progress.Clear();
-            }
         }
 
         internal void TryUpdate(bool forceUpdate = false, bool canRetry = true)
@@ -167,7 +166,7 @@ namespace Mahas.ListView
             {
                 if (!_visibleNow.Contains(vc))
                 {
-                    OnCardBecameInvisible(vc);
+                    _ = OnCardBecameInvisible(vc, false);
                 }
             }
             
@@ -366,37 +365,76 @@ namespace Mahas.ListView
 
         private void OnCardBecameVisible(VirtualListCard virtualCard)
         {
-            IListViewData viewData = DataProvider.Items.ElementAt(virtualCard.Index);
+            int index = virtualCard.Index;
+            IListViewData viewData = DataProvider.Items[index];
 
-            var instance = _poolMap.Get(viewData.GetType());
-            instance.ApplyVirtualRect(virtualCard.Rect, ViewContent.RectTransform);
-            
-            var element = _elementsPool.Get();
-            element.Initialize(instance, viewData, virtualCard.Index);
-
-            if (instance.IsNewlyCreated)
+            if (_activeElementsMap.TryGetValue(index, out var element))
             {
-                _listeners.InvokeCreate(element);
-                instance.InvokeCreate();
-                instance.UnsetAsNew();
+                element.CancelRecycle();
+                var instance = element.Card;
+                instance.ApplyVirtualRect(virtualCard.Rect, ViewContent.RectTransform);
+                instance.SetData(viewData);
+
+                instance.InvokeSpawn();
+                virtualCard.SetState(VirtualListCardState.Enabled);
+
+                TrySortSiblingIndex();
+                return;
             }
 
-            instance.SetData(viewData);
-            instance.InvokeSpawn();
-            Viewport.AddVisibleElement(element);
-            _activeElementsMap[virtualCard.Index] = element;
-            virtualCard.SetVisible(true);
+            var card = _poolMap.Get(viewData.GetType());
+            card.ApplyVirtualRect(virtualCard.Rect, ViewContent.RectTransform);
+    
+            var newElement = _elementsPool.Get();
+            newElement.Initialize(card, viewData, index);
+
+            if (card.IsNewlyCreated)
+            {
+                _listeners.InvokeCreate(newElement);
+                card.InvokeCreate();
+                card.UnsetAsNew();
+            }
+
+            card.SetData(viewData);
+            card.InvokeSpawn();
+
+            Viewport.AddVisibleElement(newElement);
+            _activeElementsMap[index] = newElement;
+
+            virtualCard.SetState(VirtualListCardState.Enabled);
             TrySortSiblingIndex();
         }
 
-        private void OnCardBecameInvisible(VirtualListCard virtualCard)
+        private async Task OnCardBecameInvisible(VirtualListCard virtualCard, bool immediate)
         {
             int index = virtualCard.Index;
             var element = _activeElementsMap[index];
+
+            bool fullyRecycled = true;
+
+            if (!immediate)
+            {
+                element.CancelRecycle();
+                element.RecycleCTS = new CancellationTokenSource();
+
+                try
+                {
+                    virtualCard.SetState(VirtualListCardState.WaitingForRecycle);
+                    await SafeRecycle(element, element.RecycleCTS.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    fullyRecycled = false;
+                }
+            }
+
+            if (!fullyRecycled)
+                return;
+
             Viewport.RemoveVisibleElement(element);
             _activeElementsMap.Remove(index);
             _poolMap.Release(element.Card);
-            virtualCard.SetVisible(false);
+            virtualCard.SetState(VirtualListCardState.Disabled);
             TrySortSiblingIndex();
         }
 
@@ -412,5 +450,29 @@ namespace Mahas.ListView
             }
             
         }
+        
+        private async Task SafeRecycle(ListViewElement element, CancellationToken token)
+        {
+            try
+            {
+                await element.Card.InvokeProcessRecycle(token);
+            }
+            catch (Exception ex) when (!(ex is OperationCanceledException))
+            {
+                Debug.LogError($"ListView - ProcessRecycle exception in card {element.Index}: {ex}");
+            }
+        }
+        
+        private void HardRecycle(VirtualListCard virtualCard)
+        {
+            int index = virtualCard.Index;
+            var element = _activeElementsMap[index];
+
+            element.CancelRecycle();
+            Viewport.RemoveVisibleElement(element);
+            _poolMap.Release(element.Card);
+            virtualCard.SetState(VirtualListCardState.Disabled);
+        }
+        
     }
 }
