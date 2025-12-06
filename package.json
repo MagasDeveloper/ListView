@@ -18,5 +18,17 @@
     "plugin",
 	"listview"
   ],
+  "samples": [
+    {
+      "displayName": "Game Missions",
+      "description": "A horizontal virtualized list showcasing mission cards, dynamic data updates, and smooth scrolling.",
+      "path": "Samples~/Missions-HorizontalList"
+    },
+    {
+      "displayName": "User Ratings",
+      "description": "A vertical list example demonstrating item recycling, real-time binding, and efficient UI performance.",
+      "path": "Samples~/Rating-VerticalList"
+    }
+    ],
   "documentationUrl": "https://github.com/MagasDeveloper/ListView#readme"
 }
