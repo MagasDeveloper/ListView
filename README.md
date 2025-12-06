@@ -30,7 +30,7 @@ Open the Releases section on GitHub:
 
 👉 https://github.com/MagasDeveloper/ListView/releases
 
-You will see a list of available versions (for example: v1.0.0).
+You will see a list of available versions (for example: v1.0.1).
 Each release contains:
 
 - a version number
@@ -48,10 +48,10 @@ Window → Package Manager → Add package from Git URL
 Insert the URL with the selected version tag:
 
 ```bash
-https://github.com/MagasDeveloper/ListView.git#v1.0.0
+https://github.com/MagasDeveloper/ListView.git#v1.0.1
 ```
 
-Replace v1.0.0 with any other release tag if needed.
+Replace v1.0.1 with any other release tag if needed.
 
 Unity will download that exact version and lock it, so your project will remain stable even if new updates are published.
 
@@ -81,7 +81,7 @@ To update, simply:
 3. Replace the tag in your Git URL in Package Manager:
 
 ```bash
-https://github.com/MagasDeveloper/ListView.git#v1.0.0
+https://github.com/MagasDeveloper/ListView.git#v1.0.1
 ```
 Unity will fetch the new version automatically.
 
